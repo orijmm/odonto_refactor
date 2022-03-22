@@ -3,6 +3,7 @@
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,15 +20,35 @@ use Illuminate\Support\Facades\Route;
 Route::post('register', [RegisterController::class, 'register']);
 Route::post('login', [RegisterController::class, 'login']);
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+//pagina de error Unauthorised
+Route::get('403', function () {
+    return response()->json([
+        'success' => false,
+        'code' => 403,
+        'message' => 'unautorized'
+    ]);
+})->name('error403');
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    
-    Route::get('users', [UserController::class,'index']);
-    Route::get('users/{user}', [UserController::class,'show']);
-    Route::put('users/{user}/update', [UserController::class,'update']);
-    Route::delete('users/{user}/delete', [UserController::class,'destroy']);
 
+    //admin users
+    Route::group([
+        'prefix' => 'admin',
+        'middleware' => 'is_admin',
+        'as' => 'admin.'
+    ], function () {
+        Route::get('users', [UserController::class, 'index']);
+        Route::get('users/{user}', [UserController::class, 'show']);
+        Route::put('users/{user}/update', [UserController::class, 'update']);
+        Route::delete('users/{user}/delete', [UserController::class, 'destroy']);
+    });
+
+    //no admin users
+    Route::get('rutas', function(){
+        return !( Auth::user()->is_admin == 1);
+    });
+});
+
+Route::get('guestTest', function(){
+    return 'guest';
 });
