@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -37,10 +38,17 @@ Route::middleware(['auth:sanctum'])->group(function () {
         'middleware' => 'is_admin',
         'as' => 'admin.'
     ], function () {
+        //users
         Route::get('users', [UserController::class, 'index']);
         Route::get('users/{user}', [UserController::class, 'show']);
         Route::put('users/{user}/update', [UserController::class, 'update']);
         Route::delete('users/{user}/delete', [UserController::class, 'destroy']);
+
+        //roles
+        Route::get('roles', [RoleController::class, 'index']);
+        Route::get('roles/{role}', [RoleController::class, 'show']);
+        Route::put('roles/{role}/update', [RoleController::class, 'update']);
+        Route::delete('roles/{role}/delete', [RoleController::class, 'destroy']);
     });
 
     //no admin users

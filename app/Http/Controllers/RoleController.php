@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController;
-use App\Models\User;
-use Illuminate\Support\Facades\Validator;
 
-class UserController extends BaseController
+
+class RoleController extends BaseController
 {
     /**
      * Display a listing of the resource.
@@ -16,19 +16,9 @@ class UserController extends BaseController
      */
     public function index()
     {
-        $users = User::get();
+        $roles = Role::get();
     
-        return $this->sendResponse($users, 'Users retrieved successfully.');
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return $this->sendResponse($roles, 'Roles retrieved successfully.');
     }
 
     /**
@@ -49,9 +39,9 @@ class UserController extends BaseController
             return $this->sendError('Validation Error.', $validator->errors());       
         }
    
-        $user = User::create($input);
+        $role = Role::create($input);
    
-        return $this->sendResponse($user, 'User created successfully.');
+        return $this->sendResponse($role, 'Role created successfully.');
     }
 
     /**
@@ -62,13 +52,13 @@ class UserController extends BaseController
      */
     public function show($id)
     {
-        $user = User::find($id);
+        $role = Role::find($id);
   
-        if (is_null($user)) {
-            return $this->sendError('User not found.');
+        if (is_null($role)) {
+            return $this->sendError('Role not found.');
         }
    
-        return $this->sendResponse($user, 'User retrieved successfully.');
+        return $this->sendResponse($role, 'Role retrieved successfully.');
     }
 
     /**
@@ -78,7 +68,7 @@ class UserController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, Role $role)
     {
         $input = $request->all();
         $validator = Validator::make($input, [
@@ -89,10 +79,10 @@ class UserController extends BaseController
             return $this->sendError('Validation Error.', $validator->errors());       
         }
    
-        $user->name = $input['name'];
-        $user->save();
+        $role->name = $input['name'];
+        $role->save();
    
-        return $this->sendResponse($user, 'User updated successfully.');
+        return $this->sendResponse($role, 'Role updated successfully.');
     }
 
     /**
@@ -101,10 +91,12 @@ class UserController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy(Role $role)
     {
-        $user->delete();
+        $role->delete();
 
         return $this->sendResponse([],'Usuario Borrado');
     }
+
+
 }
