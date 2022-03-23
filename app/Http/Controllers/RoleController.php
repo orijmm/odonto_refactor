@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController;
+use App\Models\User;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
 
@@ -33,7 +34,8 @@ class RoleController extends BaseController
         $input = $request->all();
 
         $validator = Validator::make($input, [
-            'name' => 'required|unique:roles'
+            'name'          => 'required|unique:roles',
+            'display_name'  => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -75,8 +77,9 @@ class RoleController extends BaseController
         $validator = Validator::make($input, [
             'name' => [
                 'required',
-                 Rule::unique('roles')->ignore($role->id)
-            ]
+                Rule::unique('roles')->ignore($role->id)
+            ],
+            'display_name'  => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -84,9 +87,40 @@ class RoleController extends BaseController
         }
 
         $role->name = $input['name'];
+        $role->display_name = $input['display_name'];
         $role->save();
 
         return $this->sendResponse($role, 'Role updated successfully.');
+    }
+
+    /**
+     * Assign roles to an user.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function assingRole(Request $request, User $user)
+    {
+        $input = $request->all();
+
+        $validator = Validator::make($input, [
+            'roles' => 'required'
+        ]);
+
+        //Get all roles
+        $allRoles = Role::pluck('id')->all();
+
+        //dont add roles than not exist
+        $rolesExist = array_intersect($allRoles, $input['roles']);
+
+        if ($validator->fails()) {
+            return $this->sendError('Validation Error.', $validator->errors());
+        }
+
+        //asign [] of roles
+        $user->roles()->sync($rolesExist);
+
+        return $this->sendResponse($user, 'Roles asigned successfully.');
     }
 
     /**

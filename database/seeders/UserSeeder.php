@@ -19,6 +19,7 @@ class UserSeeder extends Seeder
         //Roles
         $roleAdmin = new Role();
         $roleAdmin->name = 'admin';
+        $roleAdmin->display_name = 'administrator';
         $roleAdmin->save();
 
         //Users
@@ -36,6 +37,7 @@ class UserSeeder extends Seeder
         //Roles
         $roleGuess = new Role();
         $roleGuess->name = 'guess';
+        $roleGuess->display_name = 'Guess';
         $roleGuess->save();
 
         //Users

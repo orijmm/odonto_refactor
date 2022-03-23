@@ -44,6 +44,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('users/{user}', [UserController::class, 'show']);
         Route::put('users/{user}/update', [UserController::class, 'update']);
         Route::delete('users/{user}/delete', [UserController::class, 'destroy']);
+        Route::put('users/{user}/assignMaster', [UserController::class, 'assignAdmin']);
 
         //roles
         Route::get('roles', [RoleController::class, 'index']);
@@ -51,6 +52,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('roles/{role}', [RoleController::class, 'show']);
         Route::put('roles/{role}/update', [RoleController::class, 'update']);
         Route::delete('roles/{role}/delete', [RoleController::class, 'destroy']);
+        Route::post('roles/{user}/assingRole', [RoleController::class, 'assingRole']);
     });
 
     //no admin users
