@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController;
-
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Validator;
 
 class RoleController extends BaseController
 {
@@ -17,7 +18,7 @@ class RoleController extends BaseController
     public function index()
     {
         $roles = Role::get();
-    
+
         return $this->sendResponse($roles, 'Roles retrieved successfully.');
     }
 
@@ -30,17 +31,17 @@ class RoleController extends BaseController
     public function store(Request $request)
     {
         $input = $request->all();
-   
+
         $validator = Validator::make($input, [
-            'name' => 'required'
+            'name' => 'required|unique:roles'
         ]);
-   
-        if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());       
+
+        if ($validator->fails()) {
+            return $this->sendError('Validation Error.', $validator->errors());
         }
-   
+
         $role = Role::create($input);
-   
+
         return $this->sendResponse($role, 'Role created successfully.');
     }
 
@@ -53,11 +54,11 @@ class RoleController extends BaseController
     public function show($id)
     {
         $role = Role::find($id);
-  
+
         if (is_null($role)) {
             return $this->sendError('Role not found.');
         }
-   
+
         return $this->sendResponse($role, 'Role retrieved successfully.');
     }
 
@@ -72,16 +73,19 @@ class RoleController extends BaseController
     {
         $input = $request->all();
         $validator = Validator::make($input, [
-            'name' => 'required'
+            'name' => [
+                'required',
+                 Rule::unique('roles')->ignore($role->id)
+            ]
         ]);
-   
-        if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());       
+
+        if ($validator->fails()) {
+            return $this->sendError('Validation Error.', $validator->errors());
         }
-   
+
         $role->name = $input['name'];
         $role->save();
-   
+
         return $this->sendResponse($role, 'Role updated successfully.');
     }
 
@@ -95,8 +99,6 @@ class RoleController extends BaseController
     {
         $role->delete();
 
-        return $this->sendResponse([],'Usuario Borrado');
+        return $this->sendResponse([], 'Role deleted');
     }
-
-
 }

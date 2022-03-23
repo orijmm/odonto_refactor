@@ -40,12 +40,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
     ], function () {
         //users
         Route::get('users', [UserController::class, 'index']);
+        Route::post('users', [UserController::class, 'store']);
         Route::get('users/{user}', [UserController::class, 'show']);
         Route::put('users/{user}/update', [UserController::class, 'update']);
         Route::delete('users/{user}/delete', [UserController::class, 'destroy']);
 
         //roles
         Route::get('roles', [RoleController::class, 'index']);
+        Route::post('roles', [RoleController::class, 'store']);
         Route::get('roles/{role}', [RoleController::class, 'show']);
         Route::put('roles/{role}/update', [RoleController::class, 'update']);
         Route::delete('roles/{role}/delete', [RoleController::class, 'destroy']);
