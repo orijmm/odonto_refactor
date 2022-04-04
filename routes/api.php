@@ -56,7 +56,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     //no admin users
     Route::get('rutas', function(){
-        
         return 'ok';
     });
 
