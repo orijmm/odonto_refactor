@@ -3,7 +3,6 @@
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -47,7 +46,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::put('users/{user}/assignMaster', [UserController::class, 'assignAdmin']);
 
         //roles
-        Route::get('roles', [RoleController::class, 'index']);
+        Route::get('roles', [RoleController::class, 'index'])->middleware('role:guess');
         Route::post('roles', [RoleController::class, 'store']);
         Route::get('roles/{role}', [RoleController::class, 'show']);
         Route::put('roles/{role}/update', [RoleController::class, 'update']);
@@ -57,8 +56,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     //no admin users
     Route::get('rutas', function(){
-        return !( Auth::user()->is_admin == 1);
+        
+        return 'ok';
     });
+
 });
 
 Route::get('guestTest', function(){
