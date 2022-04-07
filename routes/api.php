@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -52,6 +53,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::put('roles/{role}/update', [RoleController::class, 'update']);
         Route::delete('roles/{role}/delete', [RoleController::class, 'destroy']);
         Route::post('roles/{user}/assingRole', [RoleController::class, 'assingRole']);
+
+        //settings
+        Route::get('settings/{setting}', [SettingController::class, 'show']);
+        Route::put('settings/{setting}/update', [SettingController::class, 'update']);
+        Route::delete('settings/{setting}/delete', [SettingController::class, 'destroy']);
     });
 
     //no admin users
